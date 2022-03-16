@@ -1,0 +1,3 @@
+#!/command/with-contenv bash
+cd /data
+exec node index.js

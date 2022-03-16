@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  gamearch:
+    image: quay.io/ckoenig/gamearch:0.8.5
+    container_name: gamearch
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    volumes:
+      - db:/data/db
+    env_file:
+      - .env
+
+volumes:
+  db:

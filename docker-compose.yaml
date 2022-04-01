@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   gamearch:
-    image: quay.io/ckoenig/gamearch:0.8.5
+    image: quay.io/ckoenig/gamearch:latest
     container_name: gamearch
     restart: unless-stopped
     ports:

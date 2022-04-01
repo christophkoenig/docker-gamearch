@@ -5,7 +5,7 @@
 Before doing anything else you should pull the container from the registry:
 
 ```bash
-docker pull quay.io/ckoenig/gamearch:0.8.5
+docker pull quay.io/ckoenig/gamearch:latest
 ```
 
 Start by copying the `.env` file from `build` and open it with your favorite editor. 
@@ -43,7 +43,7 @@ docker run -it -d \
     --env-file .env \
     -v gamearch_db:/data/db \
     -p 8099:8080 \
-    quay.io/ckoenig/gamearch:0.8.5
+    quay.io/ckoenig/gamearch:latest
 ```
 
 It should be available at **http://localhost:8099**.

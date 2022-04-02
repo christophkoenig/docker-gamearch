@@ -48,6 +48,31 @@ docker run -it -d \
 
 It should be available at **http://localhost:8099**.
 
+### Updating the container
+
+To update the container stop and remove the old container:
+
+```bash
+docker stop gamearch
+docker rm gamearch
+```
+Then pull the latest image:
+
+```bash
+docker pull quay.io/ckoenig/gamearch:latest
+```
+And finally, run a new container:
+```bash
+docker run -it -d \
+    --name=gamearch \
+    --env-file .env \
+    -v gamearch_db:/data/db \
+    -p 8099:8080 \
+    quay.io/ckoenig/gamearch:latest
+```
+
+Provided you didn't change the volume your settings and games will remain untouched.
+
 ### Docker compose
 
 Another way to start the container is with the included `docker-compose.yaml` file. Take the same steps to create your `.env` file and start the container with:

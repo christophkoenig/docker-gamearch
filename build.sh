@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
-VERSION="0.9.1beta"
+VERSION="1.0"
 IMAGE_NAME="quay.io/ckoenig/gamearch"
 BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 REPO="https://github.com/Cryptec/GameArch.git"

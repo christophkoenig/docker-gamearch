@@ -1,8 +1,8 @@
 # build stage
 FROM ubuntu:focal AS builder
 
-ARG REPO=https://github.com/Cryptec/GameArch.git
-ARG BRANCH=main
+ARG VERSION=1.0.1
+ARG ARCHIVE=https://github.com/Cryptec/GameArch/archive/refs/tags/v${VERSION}.tar.gz
 ENV TZ=Europe/Berlin
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -10,7 +10,10 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone &
     mkdir /data && \
     apt update && \
     apt upgrade -y --no-install-recommends && \
-    apt install -y --no-install-recommends git curl ca-certificates
+    apt install -y --no-install-recommends curl ca-certificates
+
+# add app
+ADD ${ARCHIVE} /data
 
 # node and yarn
 RUN curl -sL https://deb.nodesource.com/setup_16.x -o /data/nodesource_setup.sh && \
@@ -20,17 +23,16 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x -o /data/nodesource_setup.sh 
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt update && \
-    apt install --no-install-recommends yarn
+    apt install --no-install-recommends yarn && \
+    tar -C /data -zxpf /data/v${VERSION}.tar.gz
 
-# app
-RUN git clone -b ${BRANCH} ${REPO} /data/GameArch
+# build app
+COPY build/platforms.js /data/GameArch-${VERSION}/Frontend/src/utils/
 
-COPY build/platforms.js /data/GameArch/Frontend/src/utils/
-
-RUN cd /data/GameArch/Frontend && \
+RUN cd /data/GameArch-${VERSION}/Frontend && \
     yarn install && \
     yarn build && \
-    cd /data/GameArch/Backend && \
+    cd /data/GameArch-${VERSION}/Backend && \
     rm -rf node_modules && \
     yarn install --frozen-lockfile && \
     yarn cache clean
@@ -39,7 +41,7 @@ RUN cd /data/GameArch/Frontend && \
 FROM ubuntu:focal
 
 ARG BUILD_DATE
-ARG VERSION
+ARG VERSION=1.0.1
 ARG S6_OVERLAY_VERSION=3.1.0.1
 ENV TZ=Europe/Berlin
 ENV DEBIAN_FRONTEND=noninteractive
@@ -75,8 +77,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone &
 WORKDIR /data
 
 # copy backend and frontend assets
-COPY --chown=gamearch:gamearch --from=builder /data/GameArch/Backend .
-COPY --chown=www-data:www-data --from=builder /data/GameArch/Frontend/build /usr/share/nginx/html
+COPY --chown=gamearch:gamearch --from=builder /data/GameArch-${VERSION}/Backend .
+COPY --chown=www-data:www-data --from=builder /data/GameArch-${VERSION}/Frontend/build /usr/share/nginx/html
 
 # copy nginx and s6 config files
 COPY root/ /

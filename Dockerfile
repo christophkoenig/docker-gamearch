@@ -1,5 +1,5 @@
 # build stage
-FROM ubuntu:focal AS builder
+FROM ubuntu:jammy AS builder
 
 ARG VERSION=1.0.1
 ARG ARCHIVE=https://github.com/Cryptec/GameArch/archive/refs/tags/v${VERSION}.tar.gz
@@ -38,7 +38,7 @@ RUN cd /data/GameArch-${VERSION}/Frontend && \
     yarn cache clean
 
 # production stage
-FROM ubuntu:focal
+FROM ubuntu:jammy
 
 ARG BUILD_DATE
 ARG VERSION=1.0.1
@@ -60,7 +60,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone &
     mkdir -p /usr/share/nginx/html && \
     apt update -y && \
     apt upgrade -y --no-install-recommends && \
-    apt install -y --no-install-recommends curl nginx ca-certificates sqlite3 && \
+    apt install -y --no-install-recommends curl nginx ca-certificates sqlite3 xz-utils && \
     curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh && \
     bash /tmp/nodesource_setup.sh && \
     apt install -y nodejs && \

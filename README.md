@@ -42,6 +42,7 @@ docker run -it -d \
     --name=gamearch \
     --env-file .env \
     -v gamearch_db:/data/db \
+    -v gamearch_uploads:/data/public/uploads \
     -p 8099:8080 \
     quay.io/ckoenig/gamearch:latest
 ```
@@ -67,6 +68,7 @@ docker run -it -d \
     --name=gamearch \
     --env-file .env \
     -v gamearch_db:/data/db \
+    -v gamearch_uploads:/data/public/uploads \
     -p 8099:8080 \
     quay.io/ckoenig/gamearch:latest
 ```
